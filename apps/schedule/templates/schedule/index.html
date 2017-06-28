@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>What's Up</title>
+    <style>
+      table {
+        border-collapse: collapse;
+      }
+      tr, thead tr td{
+        border: solid 1px black;
+        margin: 0;
+        min-width: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="{% url 'login:logout' %}">Logout</a>
+    <h1>Hello, {{ user.name }}!</h1>
+    <p>Here are your appointments for today, {% now 'F d, Y' %}</p>
+    <table>
+      <thead>
+        <tr>
+          <td>Tasks</td>
+          <td>Time</td>
+          <td>Status</td>
+          <td>Action</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in todaytasks %}
+          <tr>
+            <td>{{ task.task }}</td>
+            <td>{{ task.time|date:'H:i' }}</td>
+            <td>{{ task.status }}</td>
+            <td><a href="{% url 'schedule:edit' appt=task.id %}">Edit
+              </a>   <a href="{% url 'schedule:delete' appt=task.id %}">Delete</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p>Your other appointments:</p>
+    <table>
+      <thead>
+        <tr>
+          <td>Tasks</td>
+          <td>Date</td>
+          <td>Time</td>
+        </tr>
+      </thead>
+      <tbody>
+      {% for task in futuretasks %}
+        <tr>
+          <td>{{ task.task }}</td>
+          <td>{{ task.date|date:'F d' }}</td>
+          <td>{{ task.time|date:'H:i' }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <form action="{% url 'schedule:add' %}" method="POST">
+      {% csrf_token %}
+      <legend>Add Appointment</legend>
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date">
+      <label for="time">Time:</label>
+      <input type="time" id="time" name="time">
+      <label for="task">Task:</label>
+      <input type="text" id="task" name="task">
+      <button type="submit">Add</button>
+    </form>
+    {% for message in messages %}
+      {{ message }}
+    {% endfor %}
+  </body>
+</html>

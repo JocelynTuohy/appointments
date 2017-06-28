@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>Update Appointment</title>
+  </head>
+  <body>
+    <a href="{% url 'schedule:index' %}">Dashboard</a>
+    <a href="{% url 'login:logout' %}">Logout</a>
+    <form action="{% url 'schedule:update' appt=task.id %}" method='POST'>
+      {% csrf_token %}
+      <label for="task">Task:</label>
+      <input type="text" id="task" name="task" value="{{ task.task }}">
+      <label for="status">Status:</label>
+      <select name="status" id="status" selectedIndex="{{ task.status }}">
+        {% if task.status == 'Pending' %}
+          <option value="Pending" selected>Pending</option>
+        {% else %}
+          <option value="Pending">Pending</option>
+        {% endif %}
+        {% if task.status == 'Done' %}
+          <option value="Done" selected>Done</option>
+        {% else %}
+          <option value="Done">Done</option>
+        {% endif %}
+        {% if task.status == 'Missed' %}
+          <option value="Missed" selected>Missed</option>
+        {% else %}
+          <option value="Missed">Missed</option>
+        {% endif %}
+      </select>
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date" value="{{ task.date|date:'Y-m-d' }}">
+      <label for="time">Time:</label>
+      <input type="time" id="time" name="time" value="{{ task.time|date:'H:i' }}">
+      <button type="submit">Update</button>
+    </form>
+    {% for message in messages %}
+      <p>{{ message }}</p>
+    {% endfor %}
+  </body>
+</html>
